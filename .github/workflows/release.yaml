@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12"
+      - run: yarn
+      - run: yarn build
       - run: yarn global add semantic-release-cli
       - name: Release
         env:

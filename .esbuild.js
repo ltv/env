@@ -1,6 +1,10 @@
+const fs = require('fs');
 const path = require('path');
 const esbuild = require('esbuild');
 const outDir = path.resolve(__dirname, 'dist');
+
+const filter = x => ['.bin', '@app'].indexOf(x) === -1;
+const nodeModules = fs.readdirSync('node_modules').filter(filter);
 
 // const options = ;
 const defaultOptions = {
@@ -11,7 +15,8 @@ const defaultOptions = {
   sourcemap: false,
   platform: 'node',
   tsconfig: './tsconfig.json',
-  logLevel: 'error'
+  logLevel: 'error',
+  external: nodeModules
 };
 
 const build = (format = 'cjs') => {
