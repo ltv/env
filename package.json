@@ -6,7 +6,7 @@
   "module": "dist/env.esm.js",
   "typings": "dist/types/env.d.ts",
   "repository": {
-    "url": "git@github.com:ltv/env.git"
+    "url": "https://github.com/ltv/env.git"
   },
   "author": "Luc <luc@ltv.vn>",
   "license": "MIT",
@@ -47,6 +47,12 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
     ]
   },
   "devDependencies": {
