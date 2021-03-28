@@ -1,5 +1,6 @@
 import has from 'lodash.has'
 import trim from 'lodash.trim'
+import dotenv from 'dotenv'
 
 type EnvFunc = <T = unknown>(key: string, defaultValue?: T) => T
 type Utils = {
@@ -11,6 +12,9 @@ type Utils = {
   array: (key: string, defaultValue?: string[]) => string[] | undefined
   date: (key: string, defaultValue?: Date) => Date | undefined
 }
+
+const envPath = process.env.ENV_PATH || 'local.env'
+dotenv.config({ path: envPath })
 
 const utils: Utils = {
   /**
