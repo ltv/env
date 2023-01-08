@@ -3,20 +3,27 @@ import trim from 'lodash.trim'
 import dotenv from 'dotenv'
 
 type EnvFunc = <T = unknown>(key: string, defaultValue?: T) => T
-type Utils = {
-  string: (key: string, defaultValue?: string) => string | undefined
-  int: (key: string, defaultValue?: number) => number | undefined
-  float: (key: string, defaultValue?: number) => number | undefined
-  bool: (key: string, defaultValue?: boolean) => boolean | undefined
-  json: <T = unknown>(key: string, defaultValue?: T) => T | undefined
-  array: (key: string, defaultValue?: string[]) => string[] | undefined
-  date: (key: string, defaultValue?: Date) => Date | undefined
-}
 
 const envPath = process.env.ENV_PATH || 'local.env'
 dotenv.config({ path: envPath })
 
-const utils: Utils = {
+export type StringOrUndefined<T extends undefined | string> = T extends string
+  ? string
+  : undefined
+export type NumberOrUndefined<T extends undefined | number> = T extends number
+  ? number
+  : undefined
+export type BooleanOrUndefined<
+  T extends undefined | boolean
+> = T extends boolean ? boolean : undefined
+export type DateOrUndefined<T extends undefined | Date> = T extends Date
+  ? Date
+  : undefined
+export type ArrayOfStringOrUndefined<
+  T extends undefined | string[]
+> = T extends string[] ? string[] : undefined
+
+const utils = {
   /**
    * Get string from environment
    *
@@ -24,8 +31,9 @@ const utils: Utils = {
    * @param defaultValue string
    * @returns string
    */
-  string(key: string, defaultValue?: string): string | undefined {
-    return has(process.env, key) ? process.env[key] : defaultValue
+  string<R extends undefined | string>(key: string, defaultValue?: R) {
+    const rtnValue = has(process.env, key) ? process.env[key] : defaultValue
+    return rtnValue as StringOrUndefined<R>
   },
 
   /**
@@ -35,13 +43,13 @@ const utils: Utils = {
    * @param defaultValue integer number
    * @returns integer number
    */
-  int(key: string, defaultValue?: number): number | undefined {
+  int<R extends undefined | number>(key: string, defaultValue?: R) {
     if (!has(process.env, key)) {
       return defaultValue
     }
 
     const value = process.env[key] || ''
-    return parseInt(value, 10)
+    return parseInt(value, 10) as NumberOrUndefined<R>
   },
 
   /**
@@ -51,13 +59,13 @@ const utils: Utils = {
    * @param defaultValue float number
    * @returns float number
    */
-  float(key: string, defaultValue?: number): number | undefined {
+  float<R extends undefined | number>(key: string, defaultValue?: R) {
     if (!has(process.env, key)) {
       return defaultValue
     }
 
     const value = process.env[key] || ''
-    return parseFloat(value)
+    return parseFloat(value) as NumberOrUndefined<R>
   },
 
   /**
@@ -67,13 +75,13 @@ const utils: Utils = {
    * @param defaultValue boolean
    * @returns boolean
    */
-  bool(key: string, defaultValue?: boolean): boolean | undefined {
+  bool<R extends undefined | boolean>(key: string, defaultValue?: R) {
     if (!has(process.env, key)) {
       return defaultValue
     }
 
     const value = process.env[key]
-    return value === 'true'
+    return (value === 'true') as BooleanOrUndefined<R>
   },
 
   /**
@@ -83,16 +91,18 @@ const utils: Utils = {
    * @param defaultValue string
    * @returns object
    */
-  json<T = unknown>(key: string, defaultValue?: T): T | undefined {
+  json<T = unknown>(key: string, defaultValue?: T) {
     if (!has(process.env, key)) {
-      return defaultValue
+      return defaultValue as T
     }
 
     const value = process.env[key] || ''
     try {
-      return JSON.parse(value)
+      return JSON.parse(value) as T
     } catch (error) {
-      throw new Error(`Invalid json environment variable ${key}: ${error.message}`)
+      throw new Error(
+        `Invalid json environment variable ${key}: ${(error as Error).message}`
+      )
     }
   },
 
@@ -103,9 +113,9 @@ const utils: Utils = {
    * @param defaultValue string[]
    * @returns string[]
    */
-  array(key: string, defaultValue?: string[]): string[] | undefined {
+  array<R extends undefined | string[]>(key: string, defaultValue?: R) {
     if (!has(process.env, key)) {
-      return defaultValue
+      return defaultValue as ArrayOfStringOrUndefined<R>
     }
 
     let value = process.env[key] || ''
@@ -114,9 +124,9 @@ const utils: Utils = {
       value = value.substring(1, value.length - 1)
     }
 
-    return value.split(',').map((v) => {
-      return trim(trim(v, ' '), '"')
-    })
+    return value
+      .split(',')
+      .map((v) => trim(trim(v, ' '), '"')) as ArrayOfStringOrUndefined<R>
   },
 
   /**
@@ -126,13 +136,13 @@ const utils: Utils = {
    * @param defaultValue Date
    * @returns Date
    */
-  date(key: string, defaultValue?: Date): Date | undefined {
+  date<R extends undefined | Date>(key: string, defaultValue?: R) {
     if (!has(process.env, key)) {
       return defaultValue
     }
 
     const value = process.env[key] || ''
-    return new Date(value)
+    return new Date(value) as DateOrUndefined<R>
   },
 }
 
@@ -148,4 +158,4 @@ function env(key: string, defaultValue?: any) {
   return has(process.env, key) ? process.env[key] : defaultValue
 }
 
-export default Object.assign<EnvFunc, Utils>(env, utils)
+export default Object.assign<EnvFunc, typeof utils>(env, utils)
