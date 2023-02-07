@@ -1,6 +1,6 @@
 {
   "name": "@ltv/env",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "NodeJS Environment Utils",
   "main": "dist/env.cjs.js",
   "module": "dist/env.esm.js",
