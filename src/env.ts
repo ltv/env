@@ -1,11 +1,6 @@
-import has from 'lodash.has'
-import trim from 'lodash.trim'
-import dotenv from 'dotenv'
+import { has, trim } from './libs'
 
 type EnvFunc = <T = unknown>(key: string, defaultValue?: T) => T
-
-const envPath = process.env.ENV_PATH || 'local.env'
-dotenv.config({ path: envPath })
 
 export type StringOrUndefined<T extends undefined | string> = T extends string
   ? string
@@ -13,15 +8,13 @@ export type StringOrUndefined<T extends undefined | string> = T extends string
 export type NumberOrUndefined<T extends undefined | number> = T extends number
   ? number
   : undefined
-export type BooleanOrUndefined<
-  T extends undefined | boolean
-> = T extends boolean ? boolean : undefined
+export type BooleanOrUndefined<T extends undefined | boolean> =
+  T extends boolean ? boolean : undefined
 export type DateOrUndefined<T extends undefined | Date> = T extends Date
   ? Date
   : undefined
-export type ArrayOfStringOrUndefined<
-  T extends undefined | string[]
-> = T extends string[] ? string[] : undefined
+export type ArrayOfStringOrUndefined<T extends undefined | string[]> =
+  T extends string[] ? string[] : undefined
 
 const utils = {
   /**

@@ -1,0 +1,6 @@
+/node_modules
+/lib/**/*
+/CONTRIBUTING.md
+cdk/cdk.out
+/cdk/cdk.out/
+packages/service/actions.ts

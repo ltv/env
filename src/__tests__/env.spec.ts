@@ -113,17 +113,26 @@ describe('Env helper', () => {
 
     test('Returns an array when not using brackets', () => {
       process.env.ARRAY_VAR = 'firstValue, secondValue'
-      expect(envHelper.array('ARRAY_VAR')).toEqual(['firstValue', 'secondValue'])
+      expect(envHelper.array('ARRAY_VAR')).toEqual([
+        'firstValue',
+        'secondValue',
+      ])
     })
 
     test('Supports brackets', () => {
       process.env.ARRAY_VAR = '[firstValue, secondValue]'
-      expect(envHelper.array('ARRAY_VAR')).toEqual(['firstValue', 'secondValue'])
+      expect(envHelper.array('ARRAY_VAR')).toEqual([
+        'firstValue',
+        'secondValue',
+      ])
     })
 
     test('Supports quotes and spaces', () => {
       process.env.ARRAY_VAR = '  "firstValue" , SecondValue  "'
-      expect(envHelper.array('ARRAY_VAR')).toEqual(['firstValue', 'SecondValue  '])
+      expect(envHelper.array('ARRAY_VAR')).toEqual([
+        'firstValue',
+        'SecondValue  ',
+      ])
     })
   })
 
@@ -139,7 +148,9 @@ describe('Env helper', () => {
 
     test('Returns a valid date when possible', () => {
       process.env.DATE_VAR = '2010-02-21T12:34:12'
-      expect(envHelper.date('DATE_VAR')).toEqual(new Date(2010, 1, 21, 12, 34, 12))
+      expect(envHelper.date('DATE_VAR')).toEqual(
+        new Date(2010, 1, 21, 12, 34, 12)
+      )
     })
   })
 })

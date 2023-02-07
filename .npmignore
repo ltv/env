@@ -1,0 +1,12 @@
+!./dist
+!./dist/**/*
+!./dist/types/
+!package.json
+./*.js
+commitlint.config.js
+jest.*.js
+.eslint*
+@types
+coverage
+index.ts
+src/
